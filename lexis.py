@@ -17,8 +17,8 @@ from selenium.common.exceptions import NoSuchElementException
 # edge_options.use_chromium = True
 # edge_options.add_argument("user-data-dir=")
 
-publication = "Caixin Global"
-# People's Daily Online - English
+# publication = "Caixin Global"
+publication = "People's Daily Online - English"
 
 chrome_options = ChromeOptions()
 chrome_options.add_argument(r"user-data-dir=C:\Users\Sergey\Desktop\New folder\selenium")
@@ -63,13 +63,13 @@ driver.find_element_by_link_text("China & Hong Kong").click()
 
 driver.implicitly_wait(10)
 time.sleep(random.randint(1, 10))
-# driver.find_element_by_link_text("People's Daily Online - English").click()
 driver.find_element_by_link_text(publication).click()
 
 title = driver.find_element_by_id("title")
 time.sleep(random.randint(1, 10))
 title.clear()
-title.send_keys("[vaccine OR vaccines OR jabs OR vaccinat* OR inoculat* OR vax OR shots]")
+# title.send_keys("[vaccine OR vaccines OR jabs OR vaccinat* OR inoculat* OR vax OR shots]")
+title.send_keys("[vaccine* OR jabs OR vaccinat* OR inoculat* OR vax]")
 
 time.sleep(random.randint(1, 10))
 driver.find_element_by_id("date").click()
@@ -129,5 +129,6 @@ while True:
 
     time.sleep(15)
 
+print()
 print("Done!")
 driver.close()

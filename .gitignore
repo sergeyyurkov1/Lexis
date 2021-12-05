@@ -1,2 +1,3 @@
 selenium/
 config.py
+__pycache__/
