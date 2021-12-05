@@ -1,28 +1,58 @@
+# msedge-selenium-tools
+
 import time
 import random
 
-import selenium
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Chrome
+from selenium.webdriver import ChromeOptions
 
-driver = webdriver.Edge(executable_path=r"C:\Users\Sergey\Desktop\New folder\edgedriver_win64\msedgedriver.exe")
+# from msedge.selenium_tools import Edge
+# from msedge.selenium_tools import EdgeOptions
+
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import NoSuchElementException
+
+# edge_options = EdgeOptions()
+# edge_options.use_chromium = True
+# edge_options.add_argument("user-data-dir=")
+
+publication = "Caixin Global"
+# People's Daily Online - English
+
+chrome_options = ChromeOptions()
+chrome_options.add_argument(r"user-data-dir=C:\Users\Sergey\Desktop\New folder\selenium")
+
+# driver = Edge(executable_path=r"C:\Users\Sergey\Desktop\New folder\edgedriver_win64\msedgedriver.exe", edge_options)
+driver = Chrome(executable_path=r"C:\Users\Sergey\Desktop\New folder\chromedriver_win32\chromedriver.exe", chrome_options=chrome_options)
 driver.get("https://plus.lexis.com/practice?config=00JABiY2NmNDQyYy00YzVkLTQ1ZTEtOTlmOC1iZWY3ODJhMGU1MmMKAFBvZENhdGFsb2dvYAlCefLrCgCo7TDuPYU3&crid=2fccf270-a8a7-48a2-9131-46370b8d990f")
 
-userid = driver.find_element_by_id("userid")
-time.sleep(random.randint(1, 10))
-userid.clear()
-userid.send_keys("p5vps06280gn@tuta.io")
+# Login
+# ---------------------------
+import config
+try:
+    userid = driver.find_element_by_id("userid")
+    time.sleep(random.randint(1, 10))
+    userid.clear()
+    userid.send_keys(config.login)
 
-password = driver.find_element_by_id("password")
-time.sleep(random.randint(1, 10))
-password.clear()
-password.send_keys("0U5o#PVw&&y$")
+    password = driver.find_element_by_id("password")
+    time.sleep(random.randint(1, 10))
+    password.clear()
+    password.send_keys(config.password)
 
-time.sleep(random.randint(1, 10))
-driver.find_element_by_id("chkrmflag").click()
-time.sleep(random.randint(1, 10))
-driver.find_element_by_id("signInSbmtBtn").click()
+    # Remember me
+    time.sleep(random.randint(1, 10))
+    driver.find_element_by_id("chkrmflag").click()
 
+    # Sign in button
+    time.sleep(random.randint(1, 10))
+    driver.find_element_by_id("signInSbmtBtn").click()
+except NoSuchElementException:
+    pass
+
+# Navigation
+# ---------------------------
 driver.implicitly_wait(10)
 time.sleep(random.randint(1, 10))
 driver.find_element_by_link_text("International By Country and Region").click()
@@ -33,7 +63,8 @@ driver.find_element_by_link_text("China & Hong Kong").click()
 
 driver.implicitly_wait(10)
 time.sleep(random.randint(1, 10))
-driver.find_element_by_link_text("People's Daily Online - English").click()
+# driver.find_element_by_link_text("People's Daily Online - English").click()
+driver.find_element_by_link_text(publication).click()
 
 title = driver.find_element_by_id("title")
 time.sleep(random.randint(1, 10))
@@ -57,15 +88,11 @@ dateTo.send_keys("08/29/2021")
 time.sleep(random.randint(1, 10))
 driver.find_element_by_xpath(r'//*[@id="J8shk"]/div[1]/div/span/button[1]').click()
 
+# Download
+# ---------------------------
 pages = 0
 page = 1
 while True:
-    # Get pages
-    if page == 1:
-        driver.implicitly_wait(10)
-        time.sleep(5)
-        pages = int(driver.find_element_by_css_selector('#tf4k > ln-searchresults > div > div.column.column-80-all.pageWrapperRight > div:nth-child(2) > div.results.resultsListWrapper > div > div.resultsColumn.column > div > div.paging > pagination > button:nth-child(6)').text)
-
     # Select all
     driver.implicitly_wait(10)
     time.sleep(random.randint(1, 10))
@@ -88,18 +115,19 @@ while True:
     time.sleep(5)
     driver.find_element_by_css_selector("#typk > ln-delivery > lib-dialog > aside > footer > div.button-group.actions > button.button.primary.contained").click()
 
+    driver.find_element_by_xpath('//body').send_keys(Keys.END)
     driver.implicitly_wait(10)
     time.sleep(30)
     try:
         driver.find_element_by_css_selector("#tf4k > ln-searchresults > div > div.column.column-80-all.pageWrapperRight > div:nth-child(2) > div.results.resultsListWrapper > div > div.resultsColumn.column > div > div.paging > pagination > button:last-child").click()
-    except selenium.common.exceptions.ElementClickInterceptedException:
-        print("ERROR")
-
-    if page == pages:
+    except ElementClickInterceptedException:
+        print()
+        print("No more pages.")
         break
+
     page += 1
 
     time.sleep(15)
 
-time.sleep(15)
+print("Done!")
 driver.close()
