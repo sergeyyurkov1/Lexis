@@ -91,32 +91,29 @@ dateTo.clear()
 dateTo.send_keys(config.date["to"])
 
 time.sleep(random.randint(2, 10))
-driver.find_element_by_xpath(r'//*[@id="s4shk"]/div[1]/div/span/button[1]').click()
-# driver.find_element_by_class_name('lexisplus-asf-search-button btn icon la-Search').click()
+# driver.find_element_by_xpath(r'//*[@id="J8shk"]/div[1]/div/span/button[1]').click()
+driver.find_element_by_css_selector('#J4shk > div.lexisplus-documentslist > div > span > button.lexisplus-asf-search-button.btn.icon.la-Search').click()
 
 page = 1
 
 def select_and_download():
     # Select all
-    XPATH = r'//*[@id="ff4k"]/ln-searchresults/div/div[3]/div[2]/div[3]/div/div[2]/div/toolbar/div/div/ul[1]/li[1]/input'
     try:
-        WebDriverWait(driver, 30).until(
-            EC.visibility_of_element_located((By.XPATH, XPATH))
+        WebDriverWait(driver, 90).until(
+            EC.visibility_of_element_located((By.XPATH, r'//*[@id="tf4k"]/ln-searchresults/div/div[3]/div[2]/div[3]/div/div[2]/div/toolbar/div/div/ul[1]/li[1]/input'))
         )
         time.sleep(random.randint(2, 10))
-        checkbox = driver.find_element_by_xpath(XPATH)
+        checkbox = driver.find_element_by_xpath(r'//*[@id="tf4k"]/ln-searchresults/div/div[3]/div[2]/div[3]/div/div[2]/div/toolbar/div/div/ul[1]/li[1]/input')
         if checkbox.is_selected() == False:
             checkbox.click()
     except TimeoutException:
-        print("Can't select all! Please check the element's selector.")
         driver.refresh()
         select_and_download()
 
-    import re
     # Click download button
     driver.implicitly_wait(10)
     time.sleep(random.randint(2, 10))
-    driver.find_element_by_xpath('//*[@id]/ln-searchresults/div/div[3]/div[2]/div[3]/div/div[2]/div/toolbar/div/div/ul[1]/li[3]/ul/li[2]/toolbarbutton/button/span[1]').click()
+    driver.find_element_by_css_selector("#tf4k > ln-searchresults > div > div.column.column-80-all.pageWrapperRight > div:nth-child(2) > div.results.resultsListWrapper > div > div.resultsColumn.column > div > toolbar > div > div > ul:nth-child(1) > li.expandable > ul > li.lastUsed > toolbarbutton > button").click()
     
     # Set file name
     try:
@@ -134,7 +131,7 @@ def select_and_download():
     # Download
     driver.implicitly_wait(10)
     time.sleep(random.randint(2, 10))
-    driver.find_element_by_xpath('//*[@id]/ln-delivery/lib-dialog/aside/footer/div[2]/button[1]').click()
+    driver.find_element_by_css_selector("#typk > ln-delivery > lib-dialog > aside > footer > div.button-group.actions > button.button.primary.contained").click()
 
 def go():    
     while True:
@@ -151,8 +148,7 @@ def go():
             go()
         finally:
             try:
-                driver.find_element_by_css_selector("#ff4k > ln-searchresults > div > div.column.column-80-all.pageWrapperRight > div:nth-child(2) > div.results.resultsListWrapper > div > div.resultsColumn.column > div > div.paging > pagination > button:last-child").click()
-                # driver.find_element_by_xpath('(//*[@id]/ln-searchresults/div/div[3]/div[2]/div[3]/div/div[2]/div/div[55]/pagination/button)[last()]').click()
+                driver.find_element_by_css_selector("#tf4k > ln-searchresults > div > div.column.column-80-all.pageWrapperRight > div:nth-child(2) > div.results.resultsListWrapper > div > div.resultsColumn.column > div > div.paging > pagination > button:last-child").click()
             except ElementClickInterceptedException:
                 print()
                 print("No more pages.")
